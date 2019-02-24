@@ -4,3 +4,14 @@ gateway:
       -
         target: /path
         uri: https://samples.openweathermap.org
+
+
+management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,info,metrics,threaddump,health
