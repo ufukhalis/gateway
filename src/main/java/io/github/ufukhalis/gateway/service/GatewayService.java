@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -33,9 +34,10 @@ public class GatewayService {
 
             String url = mapping.getUri() + redirectionPath;
             String queryParams = Option.of(request.getURI().getQuery()).map(params -> "?" + params).getOrElse("");
+            MediaType contentType = request.getHeaders().getContentType();
             Flux<DataBuffer> body = request.getBody();
 
-            return makeRequest(request.getMethod(), url, queryParams, body);
+            return makeRequest(request.getMethod(), url, queryParams, body, contentType);
         }).getOrElse(Mono.error(new RuntimeException("Mapping Not Found, path : " + gatewayPath)));
     }
 
@@ -44,10 +46,11 @@ public class GatewayService {
                 .find(mapping -> gatewayPath.startsWith(mapping.getTarget()));
     }
 
-    private Mono<String> makeRequest(HttpMethod method, String url, String queryParams, Flux<DataBuffer> body) {
+    private Mono<String> makeRequest(HttpMethod method, String url, String queryParams, Flux<DataBuffer> body, MediaType contentType) {
         return webClientBuilder.baseUrl(url).build()
                 .method(method)
                 .uri(queryParams)
+                .contentType(contentType)
                 .body(BodyInserters.fromDataBuffers(body))
                 .retrieve()
                 .bodyToMono(String.class);
