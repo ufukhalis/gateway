@@ -1,0 +1,6 @@
+gateway:
+  config:
+    mapping:
+      -
+        target: /path
+        uri: https://samples.openweathermap.org
