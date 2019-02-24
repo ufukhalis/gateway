@@ -15,5 +15,15 @@ For redirection, you should make changes in `application.yml` file.
             target: /{path.for.gateway}
             uri: {your.service.url}
             
+Note
+------------
+This project is still under development.
+
+This project uses `Spring-WebFlux` and `vavr.io`.
+
+For more information about vavr.io, check the site http://vavr-io.github.io
 
 
+License
+----------
+All code in this repository is licensed under the Apache License, Version 2.0. See LICENCE.
